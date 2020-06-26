@@ -1,0 +1,184 @@
+<html>
+<head>
+<title> Let's Get Scary! </title>
+<style type="text/css">
+ 
+
+#maintext { 
+	/* border: 1px solid red; /*just to see what's going on */
+ 	text-align: center;
+ 	margin-top: 140px;
+ 	font-size: 18pt;
+ }
+
+#questions { 
+	/* border: 1px solid red; /*just to see what's going on */
+	text-align: center;
+	margin: 50px;
+ }
+
+/* button { 
+	font-size: 15px; 
+	margin: 10px;
+ }
+
+
+
+</style>
+
+<!-- ####SETTING UP/LOADING THE TEXTS ~~ DO NOT MODIFY#### -->
+<script>
+//TEXT VARIABLES AS GLOBALS 
+
+var nodeArray = [];
+
+// this function is different from the other example
+// because every field is being sent through this array
+// it checks to see if there is a comma
+// if there is it splits into an array
+// if there isn't it returns a string
+function makeMeArray(isString) {
+	if(isString.match(/,/g)) {
+		var cleanString = isString.replace(/"/g, "");
+		var arrayNow =  cleanString.split(",");
+		return arrayNow
+	} else {
+	return isString
+	}
+}
+
+</script>
+
+
+<!-- LOADING THE TEXTS FROM THE DOCUMENT text.js-->
+<script src="storyobjects&text.js"></script>
+
+
+<script>
+// putting the long texts into an array
+// these be entered into the objects later
+ // var alltexts = theText.split("#############");
+
+
+// splitting the object properties data by rows (linebreaks)
+// so we will get an array of these properties
+ // var propsArray = theProps.split("\n");
+
+// remember that the first line [0] is the header of the data
+// it contains the NAMES of the properties
+// (the rest of the lines contains individual values)
+// we split by tabs, so we get an array of those property names
+// these will be used to build the object
+// var propertyNames = propsArray[0].split("\t");
+
+// we declare objectsArray, this will be filled with each object
+// var objectsArray = [];
+
+// in this loop we will build each object one by one
+// by looping through each line of theProps (except the first one [0], the header)
+// and creating an object
+// for (var i = 1; i < propsArray.length; i++) {
+	// this is an empty object it will be built and entered into the array
+	// and then declared anew, and built again every time the loop runs.
+    // var myObject = {}
+    // this splits the current line (starting at line [1]) by tabs
+    // and then the J loop will the through each property in the line
+    // var theseProperties = propsArray[i].split("\t")
+    // for (var j = 0; j < theseProperties.length; j++) {
+		// tricky stuff here
+		// it is taking the property names from the header, line [0]
+		// and using them to name the object properties
+		// it is then setting the value of the property 
+		// equal to the current line [i] and tab location [j]
+		// note this is a different way of building object properties:
+			//thisObject["prop"] = "hello"
+				// as opposed to
+			//thisObject.prop = "hello"
+				// see the documentation: https://www.w3schools.com/js/js_objects.asp
+		
+        // myObject[propertyNames[j]] = makeMeArray(theseProperties[j])
+    // }
+    //This adds a final property to the object called fullText
+    // the reason I used i-1 is because in theProps [0] is the name of the properties
+    // myObject.fullText = alltexts[i-1]
+    
+    // the object is complete, it is pushed into the array
+    // objectsArray.push(myObject)
+    // and then the i-loop will continue to build the next object...
+// }
+</script>
+
+</head>
+
+<body>
+<!-- 
+I created and onload function call so it will display the very first object
+When the page is loaded
+ -->
+<body onload="choose(1)"> 
+
+<!-- SCREEN ARCHITECTURE -->
+<div id="maintext"></div>
+
+<div id="questions"></div>
+<!-- The two tags above will hold different parts of the object -->
+<script>
+// CHOICE NAVIGATION AND DISPLAY ALGORITHM
+// This function is executed when the page loads and whenever a button is clicked
+// It enters the main text into the <div id="maintext">
+// And it builds the buttons and enters them into <div id="questions">
+
+	//NOTE: IN MY OBJECT ARCHITECTURE I MADE THE CHOICE OF NUMBERS 
+	//THE SAME AS THE INDEX NUMBERS FOR THE OBJECTS WITHIN THE OBJECTSARRAY
+	// IF YOU DIDN'T DO THIS--AND THE CHOICE IS EQUAL TO THE ID OF THE OBJECTSARRAY
+	// YOU WILL NEED TO LOOP THROUGH YOUR ARRAY OF OBJECTS LOOKING FOR AN ID MATCH
+	// I WILL POST AN ALTERNATE VERSION THIS METHOD ON SLACK
+	
+function choose(objectId) {
+console.log(objectId)
+// log in console the choice id that was clicked on
+
+// here is the difference between using array index numbers and ids to navigate the decision tree
+// if you are using ids you need to loop through all of the objects
+// to look for a match with the current id (in the other version it just grabs the index from objectsArray)
+	for (var i = 0; i < nodeArray.length; i++) {
+	if (objectId == nodeArray[i].id) { 
+	
+
+	// if the match is found, then all the information from that object gets put on the page
+	// put the text into the main text div
+		document.getElementById("maintext").innerHTML = nodeArray[i].displayText;
+		image_path = "images/" + nodeArray[i].imageDisplay;
+	// loop through the array of questions/choices
+	// and build as many buttons as there are choices
+	//A single HTML button would look like this: 
+	//<button onclick=choose("i2")>Yes</button>
+	// note how I build strings of buttons pulling from different choices and questions
+	var theseQuestion = ""
+		for (var j = 0; j < nodeArray[i].questions.length; j++) {
+
+		theseQuestion += '<button onclick=choose("' //how do you add a class to this? '<class=""
+		theseQuestion += nodeArray[i].choices[j]
+		theseQuestion += '")>'
+		theseQuestion += nodeArray[i].questions[j]
+		theseQuestion += '</button>'
+	
+
+	// all the buttons are built and held in the variable theseQuestion
+	// now we display those buttons in <div id="questions">
+		document.getElementById("questions").innerHTML = theseQuestion
+
+		var myImage = new Image(450);
+			myImage.src = image_path;
+			document.getElementById("questions").appendChild(myImage)
+		}
+
+		
+	}	
+	}
+}
+</script>
+
+</body>
+</html>
+
